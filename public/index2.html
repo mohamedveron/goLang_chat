@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<head>
+    <meta charset="utf-8">
+    <title>SocketExample</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+    window.onload = function () {
+        console.log("heree");
+     conn = new WebSocket("ws://localhost:54321/ws");
+
+     conn.onopen = function (e){
+            var data = JSON.stringify({
+            "sender": "2",
+            "recipient": "2",
+            "content": "welcome"
+        });
+        conn.send(data);
+     }
+     
+        conn.onclose = function (evt) {
+            var item = document.createElement("div");
+            item.innerHTML = "<b>Connection closed.</b>";
+            appendLog(item);
+        };
+        conn.onmessage = function (evt) {
+            var messages = JSON.parse(evt.data);
+            document.getElementById('messages').append( messages.content);
+        };
+
+        
+    };
+
+    function onSubmmit(){
+
+        var data = JSON.stringify({
+            "sender": "2",
+            "recipient": "1",
+            "content": document.getElementById("msg").value
+        });
+        document.getElementById('messages').append( data.content);
+        conn.send(data);
+    }
+</script>
+</head>
+        
+<body>
+<h1>This is the Vue.js page</h1>
+<p>The following is hard coded, just for display purposes, until you code it for Vue.js</p>
+<hr>
+<ul id="messages">
+    <li>
+        <span><strong>The socket connection has been established</strong></span>
+    </li>
+</ul>
+<form>
+    <input name="msg" id="msg" type="text">
+    <button onclick="onSubmmit()">Send</button>
+</form>
+
+
+</body>
+</html>
